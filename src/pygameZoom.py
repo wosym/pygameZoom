@@ -94,11 +94,19 @@ class PygameZoom(object):
         def __init__(self, surface, start,outer):
             super().__init__()
             self.surface = surface
+            #print("size3: ", surface.get_size(), self.surface.get_size())
             self.start = start
             self.outer = outer
 
         def draw(self, surface):
+            #print("sizeB: ", surface.get_size(), self.surface.get_size())
+            #print("oz:", self.outer.zoom)
             scaled = pygame.transform.scale(self.surface, (int(self.surface.get_width() * self.outer.zoom), int(self.surface.get_height() * self.outer.zoom)))
+            #print("sizeA: ", surface.get_size(), self.surface.get_size())
+            #print(type(scaled), scaled.get_size())
+            #self.surface = scaled
+##            print("start: ", self.start)
+##            print("outer: ", self.outer.map_point(self.start[0], self.start[1]))
             surface.blit(scaled, self.outer.map_point(self.start[0], self.start[1]))
 
     def map_point(self, x, y):
@@ -122,6 +130,7 @@ class PygameZoom(object):
         self.shapes.append(self.Polygon(color, points, width, self))
 
     def blit(self, surface, start):
+        #print("size2: ", surface.get_size())
         self.shapes.append(self.Blit(surface, start,self))
 
     def set_background(self, value):
@@ -172,6 +181,7 @@ class PygameZoom(object):
             return False
 
     def correct_boundaries(self):
+        return
         if self.boundaries[0] < 0:
             self.boundaries[1] += abs(self.boundaries[0])
             self.boundaries[0] = 0
@@ -209,10 +219,10 @@ class PygameZoom(object):
             self.boundaries[3] += scale_y * (1 - mouse_y)
         self.zoom = self.WIDTH / (self.boundaries[1] - self.boundaries[0])
 
-        if self.zoom <= 1:
-            self.zoom = 1
-            self.boundaries = [0, self.WIDTH, 0, self.HEIGHT]
-            return
+#        if self.zoom <= 1:
+#            self.zoom = 1
+#            self.boundaries = [0, self.WIDTH, 0, self.HEIGHT]
+#            return
 
         self.correct_boundaries()
 
@@ -222,12 +232,14 @@ class PygameZoom(object):
             self.last_point = None
             return
 
+        #print("boundaries: ", self.boundaries)
+        #print("zoom: ", self.zoom)
         for e in pygame.event.get():
             if e.type == pygame.MOUSEBUTTONDOWN:
                 if e.button == 4:
                     self.update_boundaries("zoom in")
                 elif e.button == 5:
-                    if self.zoom > 1:
+                    if self.zoom > 1 or True:
                         self.update_boundaries("zoom out")
                 elif e.button == 1:
                     self.last_point = self.get_mouse_pos()
@@ -248,13 +260,13 @@ class PygameZoom(object):
                     offset_y = ((self.last_point[1] - mouse_pos[1]) / self.HEIGHT) * (
                                 self.boundaries[3] - self.boundaries[2])
 
-                    if self.boundaries[0] >= 0 and self.boundaries[1] <= self.WIDTH:
-                        self.boundaries[0] += offset_x
-                        self.boundaries[1] += offset_x
+                    #if self.boundaries[0] >= 0 and self.boundaries[1] <= self.WIDTH:
+                    self.boundaries[0] += offset_x
+                    self.boundaries[1] += offset_x
 
-                    if self.boundaries[2] >= 0 and self.boundaries[3] <= self.HEIGHT:
-                        self.boundaries[2] += offset_y
-                        self.boundaries[3] += offset_y
+                    #if self.boundaries[2] >= 0 and self.boundaries[3] <= self.HEIGHT:
+                    self.boundaries[2] += offset_y
+                    self.boundaries[3] += offset_y
 
                     self.correct_boundaries()
                     self.last_point = mouse_pos

@@ -1,5 +1,10 @@
 import pygame
 
+PYGAMEZOOM_HANDLED_EVENTS = [
+                                pygame.MOUSEBUTTONDOWN,
+                                pygame.MOUSEBUTTONUP,
+                                pygame.MOUSEMOTION,
+                            ]
 
 class PygameZoom(object):
     shapes = []
@@ -222,7 +227,7 @@ class PygameZoom(object):
             self.last_point = None
             return
 
-        for e in pygame.event.get():
+        for e in pygame.event.get(eventtype=PYGAMEZOOM_HANDLED_EVENTS):
             if e.type == pygame.MOUSEBUTTONDOWN:
                 if e.button == 4:
                     self.update_boundaries("zoom in")

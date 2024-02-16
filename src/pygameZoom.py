@@ -98,7 +98,7 @@ class PygameZoom(object):
             self.outer = outer
 
         def draw(self, surface):
-            scaled = pygame.transform.scale(self.surface, (int(self.surface.get_width() * self.outer.zoom), int(self.surface.get_height() * self.outer.zoom)))
+            scaled = pygame.transform.scale(self.surface, (int(surface.get_width() * self.outer.zoom), int(surface.get_height() * self.outer.zoom)))
             surface.blit(scaled, self.outer.map_point(self.start[0], self.start[1]))
 
     def map_point(self, x, y):

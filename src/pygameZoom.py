@@ -228,6 +228,8 @@ class PygameZoom(object):
             return
 
         for e in pygame.event.get(eventtype=PYGAMEZOOM_HANDLED_EVENTS):
+            #Put events back on the queue for usage outside of PygameZoom library
+            pygame.event.post(e)
             if e.type == pygame.MOUSEBUTTONDOWN:
                 if e.button == 4:
                     self.update_boundaries("zoom in")
